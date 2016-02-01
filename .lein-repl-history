@@ -1,0 +1,7 @@
+(load-file repl.clj)
+(load-file scripts/repl.clj)
+(load-file scripts/repl.cljs)
+(load-file scripts/repl.clj)
+(load-file /home/george/Dropbox/cljs-async-patterns/scripts/repl.clj)
+(load-file "/home/george/Dropbox/cljs-async-patterns/scripts/repl.clj")
+(quit)

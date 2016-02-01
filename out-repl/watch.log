@@ -1,0 +1,17 @@
+Building ...
+Compiling src/cljs_async_patterns/core.cljs
+Copying jar:file:/home/george/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/nodejs.cljs to out-repl/cljs/nodejs.cljs
+Copying jar:file:/home/george/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/nodejscli.cljs to out-repl/cljs/nodejscli.cljs
+Copying file:/home/george/Dropbox/cljs-async-patterns/src/cljs_async_patterns/core.cljs to out-repl/cljs_async_patterns/core.cljs
+... done. Elapsed 0.076100997 seconds
+Watching paths: /home/george/Dropbox/cljs-async-patterns/src
+Change detected, recompiling ...
+Compiling src/cljs_async_patterns/core.cljs
+Copying jar:file:/home/george/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/nodejs.cljs to out-repl/cljs/nodejs.cljs
+Copying jar:file:/home/george/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/nodejscli.cljs to out-repl/cljs/nodejscli.cljs
+Copying file:/home/george/Dropbox/cljs-async-patterns/src/cljs_async_patterns/core.cljs to out-repl/cljs_async_patterns/core.cljs
+... done. Elapsed 0.058714487 seconds
+Change detected, recompiling ...
+Copying jar:file:/home/george/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/nodejs.cljs to out-repl/cljs/nodejs.cljs
+Copying jar:file:/home/george/.m2/repository/org/clojure/clojurescript/1.7.228/clojurescript-1.7.228.jar!/cljs/nodejscli.cljs to out-repl/cljs/nodejscli.cljs
+... done. Elapsed 0.058438749 seconds
