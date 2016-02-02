@@ -8,6 +8,7 @@
 (ns cljs-async-patterns.core (:require        [cljs.nodejs              :as            node]
                                    [cljs.core.async          :refer        [buffer offer! poll! close! take! put! chan <! >! alts!]])
                   (:require-macros [cljs.core.async.macros   :refer        [go go-loop]]
+                                  ;[cljs-async-patterns.macros :refer [<?]]
                                    [cljs-asynchronize.macros :as dm :refer [asynchronize]]))
 
 (node/enable-util-print!) ; allows (println ..) to print to console.log
@@ -85,9 +86,8 @@
                                   (>! c (first (chan-sanitized a))))
                               (recur (rest a))))))))    
 
-(defmacro <? [func E-msg]
-  (let [c (chan 1) cb `(>? c ~E-msg)]))
-
+ 
+ 
 
 
 

@@ -7,11 +7,12 @@
 
 (ns cljs-async-patterns.core-test
   (:require        [cljs-async-patterns.core :as core]
-						       [cljs.test :refer-macros [deftest is testing run-tests async]] ; notice in particular the `async` macro
+                   [cljs.test :refer-macros [deftest is testing run-tests async]] ; notice in particular the `async` macro
                    [cljs.nodejs :as node]
                    [cljs.core.async :refer [buffer offer! poll! close! take! put! chan <! >! alts!]]
                    [clojure.string :as s]) ; often useful when testing
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]
+                   [cljs-async-patterns.macros :refer [newest]]
                    [cljs-asynchronize.macros :as dm :refer [asynchronize]]))
 
 #_(deftest core-tests
@@ -75,4 +76,10 @@
           (done)))))
 
 
+;(println (macroexpand-1 '(newest (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:")))
+;(println (macroexpand-1 '(infiz (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:")))
+
+(println 31)
+;(println (macroexpand-1 '(newest (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:")))
+(core/<print (newest (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:"))
 
