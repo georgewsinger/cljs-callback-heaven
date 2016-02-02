@@ -1,7 +1,7 @@
 (defproject cljs-callback-heaven "0.0.1-SNAPSHOT" ; "SNAPSHOT" is a maven term; it means "development version", and is contrasted with "release"
 
   ;; searchable Clojars fields
-  :description "A small library that helps you escape callback hell when interoping with javascript and core.async." 
+  :description "A small clojurescript library that helps you escape callback hell when interoping with javascript and core.async." 
   :url         "N/A" 
   :license     {:name "MIT"
                 :url  "http://opensource.org/licenses/MIT"}
