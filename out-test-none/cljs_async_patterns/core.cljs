@@ -8,7 +8,7 @@
 (ns cljs-async-patterns.core (:require        [cljs.nodejs              :as            node]
                                    [cljs.core.async          :refer        [buffer offer! poll! close! take! put! chan <! >! alts!]])
                   (:require-macros [cljs.core.async.macros   :refer        [go go-loop]]
-                                  ;[cljs-async-patterns.macros :refer [<?]]
+                                   [cljs-async-patterns.macros :refer [newest1]]
                                    [cljs-asynchronize.macros :as dm :refer [asynchronize]]))
 
 (node/enable-util-print!) ; allows (println ..) to print to console.log
@@ -86,10 +86,6 @@
                                   (>! c (first (chan-sanitized a))))
                               (recur (rest a))))))))    
 
- 
- 
-
-
 
 #_(defn >2 
    ([c]
@@ -112,7 +108,9 @@
           argv     (minimist (clj->js (vec args)))              ; minimist's main command object
           e        (or (.-e argv) "e option")                   ; a useful pattern for grabbing -options
           arg      (or (aget (aget argv "_") 0) "default_arg")] ; the primary, optionless argument
-  
+
+  (<print (newest1 (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:"))
+
   (println argv))) 
 
 (set! *main-cli-fn* -main) ; sends node's process.argv to -main

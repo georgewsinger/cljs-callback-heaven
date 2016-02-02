@@ -41,3 +41,16 @@
   "Use this macro when you pine for the notation of your childhood"
   [infixed]
   (list (second infixed) (first infixed) (last infixed)))
+
+(defmacro newest1 [func E-msg]
+   `(cljs.core.async.macros/go 
+      (let [~'c     (cljs.core.async/chan 1) 
+            ;~'cb    (cljs-async-patterns.core/>? ~'c ~E-msg)
+           ~'rep    (replace (quote {~'_ (cljs-async-patterns.core/>? ~'c ~E-msg) }) (quote ~(pop func)))
+           ;~'rep    (replace (quote {~'_ (cljs-async-patterns.core/>? ~'c ~E-msg) }) (quote ~func))
+          ]
+       ;~'rep
+       ~(apply (first func) ~'rep)
+       (~'<! ~'c))))
+
+

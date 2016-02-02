@@ -12,7 +12,7 @@
                    [cljs.core.async :refer [buffer offer! poll! close! take! put! chan <! >! alts!]]
                    [clojure.string :as s]) ; often useful when testing
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]
-                   [cljs-async-patterns.macros :refer [newest]]
+                   [cljs-async-patterns.macros :refer [newest newest1]]
                    [cljs-asynchronize.macros :as dm :refer [asynchronize]]))
 
 #_(deftest core-tests
@@ -79,7 +79,18 @@
 ;(println (macroexpand-1 '(newest (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:")))
 ;(println (macroexpand-1 '(infiz (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:")))
 
-(println 31)
+(println 35)
 ;(println (macroexpand-1 '(newest (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:")))
-(core/<print (newest (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:"))
+;(core/<print (newest (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:"))
 
+(core/<print (newest1 (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:"))
+;(println (newest1 (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:"))
+;(println (macroexpand-1 '(newest1 (.readFile (node/require "fs") "/home/george/1" "utf8" _) "ERROR:")))
+
+(.readFile (node/require "fs") "/home/george/1" "utf8" (fn [err, res] (println "55")))
+
+(core/<print (go (let [c (chan 1)]
+ ;(.readFile (node/require "fs") "/home/george/1" "utf8" (cljs-async-patterns.core/>? c "ERROR:"))
+ (.readFile (node/require "fs") "/home/george/1" "utf8" (fn [err, res] (println "55")))
+ ;(println (<! c))
+ (<! c))))
