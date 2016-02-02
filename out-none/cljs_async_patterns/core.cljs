@@ -31,9 +31,65 @@
     >?
     "ERROR: Custom error message.")
 
-#_(defn >1 
-   ([c] (fn [arg1] (go arg1))
-    ([c E] (fn [arg1] (go (if arg1 arg1 E))))))
+(defn <print [c]
+  (go (println (<! c))))
+
+(defn chan-sanitized 
+  "Since channels cannot contain nil, this function converts nil values to false."
+  [val]
+  (if (= val nil) false val))
+
+(defn >1 
+  ([c] (fn [arg1] (go (>! c (chan-sanitized arg1)))))
+  ([c E-msg] (fn [arg1] (go (if arg1 (>! c (chan-sanitized arg1)) (>! c E-msg))))))
+
+(defn >2
+  ([c]
+   (fn [err, res] (go (cond
+                       err     (>! c (chan-sanitized err))
+                       :else   (>! c (chan-sanitized res))))))
+  ([c E-msg]
+   (fn [err, res] (go (cond
+                       err     (>! c (chan-sanitized E-msg))
+                       :else   (>! c (chan-sanitized res)))))))
+
+(defn >3
+  ([c]
+   (fn [err1, err2, res] (go (cond
+                              err1    (>! c (chan-sanitized err1))
+                              err2    (>! c (chan-sanitized err2))
+                              :else   (>! c (chan-sanitized res)))))
+  ([c E-msg]
+   (fn [err1, err2, res] (go (cond
+                              err1   (>! c (chan-sanitized E-msg))
+                              err2   (>! c (chan-sanitized E-msg))
+                              :else  (>! c (chan-sanitized res))))))))
+
+;; assumes error-first callbacks
+;; http://fredkschott.com/post/2014/03/understanding-error-first-callbacks-in-node-js/
+(defn >? 
+  ([c]
+  (fn [& args] 
+    (go-loop [a args]
+      (if (= 0 (count a)) (>! c false)
+                          (if (first a) 
+                              (>! c (first (chan-sanitized a))) 
+                              (recur (rest a)))))))    
+  ([c E-msg]
+  (fn [& args] 
+    (go-loop [a args]
+      (if (= 0 (count a)) (>! c E-msg)
+                          (if (first a)
+                              (if (> (count a) 1)
+                                  (>! c E-msg)
+                                  (>! c (first (chan-sanitized a))))
+                              (recur (rest a))))))))    
+
+(defmacro <? [func E-msg]
+  (let [c (chan 1) cb `(>? c ~E-msg)]))
+
+
+
 
 #_(defn >2 
    ([c]
@@ -50,9 +106,6 @@
        (if err
          (>! c err)
          (>! c res)))))
-
-(defn <println [c]
-  (go (println (<! c))))
 
 (defn -main [& args]
   (let [minimist (cljs.nodejs/require "minimist")

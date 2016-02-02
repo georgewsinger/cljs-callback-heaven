@@ -25,14 +25,14 @@
   [arg, cb]
   (cond
     (= arg "err") (cb nil)
-    :else (cb "success")))
+    :else (cb "suc")))
 
 (defn async-2
   "Executes a 2-argument callback."
   [arg, cb]
   (cond
     (= arg "err") (cb "err" nil)
-    :else (cb nil "success")))
+    :else (cb nil "suc")))
 
 (defn async-3
   "Executes a 3-argument callback."
@@ -40,7 +40,7 @@
   (cond
     (= arg "err1") (cb "err1" nil nil)
     (= arg "err2") (cb nil "err2" nil)
-    :else (cb nil nil "success")))
+    :else (cb nil nil "suc")))
 
 (def prnt-cb-1 (fn [res] (println "res: " res)))
 (def prnt-cb-2 (fn [err, res] (println "err: " err) (println "res: " res)))
@@ -55,3 +55,24 @@
 ;(async-3 "err1" prnt-cb-3) 
 ;(async-3 "err2" prnt-cb-3) 
 ;(async-3 "suc" prnt-cb-3) 
+
+(deftest >1-test
+  (async done
+    (go 
+      (let [c1 (chan 1) c2 (chan 1) c3 (chan 1)]
+        (async-1 "suc" (core/>1 c1))
+        (async-1 "err" (core/>1 c2))
+        (async-1 "err" (core/>1 c3 "ERROR:"))
+        (is (= (<! c1) "suc"))
+        (is (= (<! c2) false))
+        (is (= (<! c3) "ERROR:"))
+        (done)))))
+
+#_(deftest standard
+   (async done
+    (testing ">1"
+      (go (is (= (<! (go "chan_val")) "chan_val"))
+          (done)))))
+
+
+
