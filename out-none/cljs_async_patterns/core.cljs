@@ -1,9 +1,9 @@
-;   ____          _       
-;  / ___|___   __| | ___  
-; | |   / _ \ / _` |/ _ \ 
-; | |__| (_) | (_| |  __/ 
-;  \____\___/ \__,_|\___| 
-;                        
+;            _ _ _                _         _                                
+;   ___ __ _| | | |__   __ _  ___| | __    | |__   ___  __ ___   _____ _ __  
+;  / __/ _` | | | '_ \ / _` |/ __| |/ /____| '_ \ / _ \/ _` \ \ / / _ \ '_ \ 
+; | (_| (_| | | | |_) | (_| | (__|   <_____| | | |  __/ (_| |\ V /  __/ | | |
+;  \___\__,_|_|_|_.__/ \__,_|\___|_|\_\    |_| |_|\___|\__,_| \_/ \___|_| |_|
+;                                                                            
 
 (ns cljs-async-patterns.core (:require        [cljs.nodejs              :as            node]
                                    [cljs.core.async          :refer        [buffer offer! poll! close! take! put! chan <! >! alts!]])
@@ -58,7 +58,7 @@
 
 ;; This function generates an [error-first callback](http://fredkschott.com/post/2014/03/understanding-error-first-callbacks-in-node-js/)
 (defn >? 
-  "Jams the first truthy argument of a callback function into its input channel."
+  "Jams the first truthy argument of a callback function into a channel."
   ([c]
   (fn [& args] 
     (go-loop [a args]
@@ -77,16 +77,4 @@
                   (>! c (first (chan-sanitized a))))
               (recur (rest a))))))))
 
-(defn -main [& args]
-  (let [minimist (cljs.nodejs/require "minimist")
-          argv     (minimist (clj->js (vec args)))              ; minimist's main command object
-          e        (or (.-e argv) "e option")                   ; a useful pattern for grabbing -options
-          arg      (or (aget (aget argv "_") 0) "default_arg")] ; the primary, optionless argument
-(<print (<2 (.readFile (node/require "fs") "/home/george/12" "utf8" _)))
-(<print (<2 (.readFile (node/require "fs") "/home/george/12" "utf8" _) "ERROR: SE, mathize, visions."))
-;(println (macroexpand-1 '(<? (.readFile (node/require "fs") "/home/george/1idf" "utf8" _) "ERROR: This is why you use SE.")))
-  (println argv))) 
-
-  ;(<print (<? (.readFile (node/require "fs") "/home/george/1dfdf" "utf8" _)))
-  
 (set! *main-cli-fn* -main)
