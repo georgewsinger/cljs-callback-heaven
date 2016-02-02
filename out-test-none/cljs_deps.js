@@ -12,7 +12,7 @@ goog.addDependency("../cljs/core/async/impl/channels.js", ['cljs.core.async.impl
 goog.addDependency("../cljs/core/async/impl/ioc_helpers.js", ['cljs.core.async.impl.ioc_helpers'], ['cljs.core', 'cljs.core.async.impl.protocols']);
 goog.addDependency("../cljs/core/async/impl/timers.js", ['cljs.core.async.impl.timers'], ['cljs.core.async.impl.channels', 'cljs.core.async.impl.dispatch', 'cljs.core', 'cljs.core.async.impl.protocols']);
 goog.addDependency("../cljs/core/async.js", ['cljs.core.async'], ['cljs.core.async.impl.channels', 'cljs.core.async.impl.dispatch', 'cljs.core', 'cljs.core.async.impl.buffers', 'cljs.core.async.impl.protocols', 'cljs.core.async.impl.ioc_helpers', 'cljs.core.async.impl.timers']);
-goog.addDependency("../A56703B.js", ['cljs.nodejs'], ['cljs.core']);
+goog.addDependency("../B125A50.js", ['cljs.nodejs'], ['cljs.core']);
 goog.addDependency("../cljs_async_patterns/core.js", ['cljs_async_patterns.core'], ['cljs.core', 'cljs.core.async', 'cljs.nodejs']);
 goog.addDependency("../cljs_async_patterns/core_test.js", ['cljs_async_patterns.core_test'], ['cljs.core', 'cljs.test', 'cljs.core.async', 'cljs.nodejs', 'cljs_async_patterns.core', 'clojure.string']);
 goog.addDependency("../cljs_async_patterns/runner.js", ['cljs_async_patterns.runner'], ['doo.runner', 'cljs_async_patterns.core_test', 'cljs.core']);
