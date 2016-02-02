@@ -8,7 +8,7 @@
 (ns cljs-async-patterns.core (:require        [cljs.nodejs              :as            node]
                                    [cljs.core.async          :refer        [buffer offer! poll! close! take! put! chan <! >! alts!]])
                   (:require-macros [cljs.core.async.macros   :refer        [go go-loop]]
-                                   [cljs-async-patterns.macros :refer [<?]]
+                                   [cljs-async-patterns.macros :refer [<? <1 <2 <3]]
                                    [cljs-asynchronize.macros :as dm :refer [asynchronize]]))
 
 (node/enable-util-print!)
@@ -49,16 +49,16 @@
    (fn [err1, err2, res] (go (cond
                               res     (>! c (chan-sanitized res))
                               err1    (>! c (chan-sanitized err1))
-                              :else   (>! c (chan-sanitized err2)))))
+                              :else   (>! c (chan-sanitized err2))))))
   ([c E-msg]
    (fn [err1, err2, res] (go (cond
                               res   (>! c (chan-sanitized res))
                               err1   (>! c (chan-sanitized E-msg))
-                              :else  (>! c (chan-sanitized E-msg))))))))
+                              :else  (>! c (chan-sanitized E-msg)))))))
 
 ;; This function generates an [error-first callback](http://fredkschott.com/post/2014/03/understanding-error-first-callbacks-in-node-js/)
 (defn >? 
-  "Jams the first truthy argument of a callback function into the input channel."
+  "Jams the first truthy argument of a callback function into its input channel."
   ([c]
   (fn [& args] 
     (go-loop [a args]
@@ -69,19 +69,24 @@
   ([c E-msg]
   (fn [& args] 
     (go-loop [a args]
-      (if (= 0 (count a)) (>! c E-msg)
-                          (if (first a)
-                              (if (> (count a) 1)
-                                  (>! c E-msg)
-                                  (>! c (first (chan-sanitized a))))
-                              (recur (rest a))))))))    
+      (if (= 0 (count a)) 
+          (>! c E-msg)
+          (if (first a)
+              (if (> (count a) 1)
+                  (>! c E-msg)
+                  (>! c (first (chan-sanitized a))))
+              (recur (rest a))))))))
 
 (defn -main [& args]
   (let [minimist (cljs.nodejs/require "minimist")
           argv     (minimist (clj->js (vec args)))              ; minimist's main command object
           e        (or (.-e argv) "e option")                   ; a useful pattern for grabbing -options
           arg      (or (aget (aget argv "_") 0) "default_arg")] ; the primary, optionless argument
-
+(<print (<2 (.readFile (node/require "fs") "/home/george/12" "utf8" _)))
+(<print (<2 (.readFile (node/require "fs") "/home/george/12" "utf8" _) "ERROR: SE, mathize, visions."))
+;(println (macroexpand-1 '(<? (.readFile (node/require "fs") "/home/george/1idf" "utf8" _) "ERROR: This is why you use SE.")))
   (println argv))) 
 
+  ;(<print (<? (.readFile (node/require "fs") "/home/george/1dfdf" "utf8" _)))
+  
 (set! *main-cli-fn* -main)
