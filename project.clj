@@ -1,7 +1,7 @@
-(defproject cljs-async-patterns "0.0.1-SNAPSHOT" ; "SNAPSHOT" is a maven term; it means "development version", and is contrasted with "release"
+(defproject cljs-callback-heaven "0.0.1-SNAPSHOT" ; "SNAPSHOT" is a maven term; it means "development version", and is contrasted with "release"
 
   ;; searchable Clojars fields
-  :description "N/A" 
+  :description "A small library that helps you escape callback hell when interoping with javascript and core.async." 
   :url         "N/A" 
   :license     {:name "MIT"
                 :url  "http://opensource.org/licenses/MIT"}
@@ -29,17 +29,17 @@
          :dependencies [[minimist        "1.2.0"]] ; minimist parses CLI arguments
         
          ;; every time you run a "lein npm <cmd>", lein-npm uses the fields below to assemble a temporary package.json
-         :package      { :name "cljs-async-patterns"
+         :package      { :name "cljs-callback-heaven"
                          :version "0.0.1" ; you must update this manually; `lein npm version` doesn't seem to do it
-                         :bin "target/cljs-async-patterns.js" ; we target the cljsbuild :main profile from below
+                         :bin "target/cljs-callback-heaven.js" ; we target the cljsbuild :main profile from below
                          :description "N/A"
-                         :main "target/cljs-async-patterns.js" ; we target the cljsbuild :main profile from below
-                         :repository {:type "git" :url "git+https://github.com/georgewsinger/cljs-async-patterns.git"}
-                         :keywords ["clojure" "clojurescript" "CLI" "utility"]
+                         :main "target/cljs-callback-heaven.js" ; we target the cljsbuild :main profile from below
+                         :repository {:type "git" :url "git+https://github.com/georgewsinger/cljs-callback-heaven.git"}
+                         :keywords ["clojure" "clojurescript"]
                          :author "George Singer"
                          :license "MIT"
                          :private false
-                         :homepage "https://github.com/georgewsinger/cljs-async-patterns#readme"}}
+                         :homepage "https://github.com/georgewsinger/cljs-callback-heaven#readme"}}
 
   :cljsbuild { :builds { ;; main is the default cljsbuild profile, marked by its use of the :advanced compilation mode
                          :main {
@@ -47,7 +47,7 @@
                            :compiler { :optimizations :advanced
                                        :target        :nodejs
                                        :output-dir    "out-advanced"
-                                       :output-to     "target/cljs-async-patterns.js"
+                                       :output-to     "target/cljs-callback-heaven.js"
                                        :externs       ["externs.js"]
                                        :verbose       true
                                        :pretty-print  true }}
@@ -58,7 +58,7 @@
                            :compiler { :optimizations :none
                                        :target        :nodejs
                                        :output-dir    "out-none"
-                                       :output-to     "target/cljs-async-patterns-none.js"
+                                       :output-to     "target/cljs-callback-heaven-none.js"
                                        :externs       ["externs.js"]
                                        :verbose       true
                                        :pretty-print  true }}
@@ -69,10 +69,10 @@
                            :compiler { :optimizations :none
                                        :target        :nodejs
                                        :output-dir    "out-test-none"
-                                       :output-to     "target/cljs-async-patterns-test-none.js"
+                                       :output-to     "target/cljs-callback-heaven-test-none.js"
                                        :externs       ["externs.js"]
                                        :verbose       true
-                                       :main          cljs-async-patterns.runner
+                                       :main          cljs-callback-heaven.runner
                                        :pretty-print  true }}
  
                          ;; lein doo uses this profile
@@ -81,8 +81,8 @@
                            :compiler { :optimizations :advanced
                                        :target        :nodejs
                                        :output-dir    "out-test-advanced"
-                                       :output-to     "target/cljs-async-patterns-test-advanced.js"
+                                       :output-to     "target/cljs-callback-heaven-test-advanced.js"
                                        :externs       ["externs.js"]
                                        :verbose       true
-                                       :main          cljs-async-patterns.runner
+                                       :main          cljs-callback-heaven.runner
                                        :pretty-print  true }}}})

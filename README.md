@@ -1,6 +1,6 @@
-# cljs-callback-heaven(IN PROGRESS)
+# cljs-callback-heaven
 
-`cljs-callback-heaven` is a library that helps you escape callback hell when interoping with javascript and [core.async](https://clojure.github.io/core.async/).
+`cljs-callback-heaven` is a small library that helps you escape callback hell when interoping with javascript and [core.async](https://clojure.github.io/core.async/).
 
 ## The Problem
 
@@ -91,5 +91,3 @@ Printing from channels is frequently useful. The long way to do this is as follo
 This library provides the `(<print ..)` function to shorten this
 
     (<print channel)
-
-
