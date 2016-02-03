@@ -6,7 +6,7 @@
 
 First there was JavaScript, giving rise to callback hell.  Then came ClojureScript, giving us core.async and the ability to jam values into channels asyncronously.  While this latter step is a significant improvement over pure JS, the problem is that **every time you interop with JavaScript within ClojureScript, you still must deal with callbacks.**
 
-For example, consider a simple asyncronous call to node.js's `readFile`:
+For example, consider a simple asyncronous call to node's `readFile`:
 
     (.readFile (nodejs/require "fs") "path/to/file" "utf8" _)
 
@@ -27,21 +27,12 @@ But this is very awkward. First, we must encapsulate everything within a go bloc
        (.readFile (nodejs/require "fs") "path/to/file" "utf8" (fn [err, res] 
                                          (if err (go (>! c err) 
                                                  (go (>! c res)))))) (<! c)))
+After a while, this becomes tiresome.
 
-For that matter, what about *custom* errors?
-
-    (go
-     (let [c (chan 1) e "CUSTOM ERROR."]
-       (.readFile (nodejs/require "fs") "path/to/file" "utf8" (fn [err, res] 
-                                         (if err (go (>! c e) 
-                                                 (go (>! c res))) (<! c)))
-
-This is becoming tiresome.
-
-# A Concise Solution
+# CLJS-Callback-Heaven
 ## A Shorter Notation for Jamming Error First Callbacks into Channels
 
-A better way to go about javascript interop is break the code above into tinier functions, macros, and a more concise notation.  First, we can use the `(>? ..)` function to create a callback of arbitrary length, which then jams its first non-nil value into a channel. For example, if `c` is a channel, then `(>! c)` returns the following callback function:
+A better way to go about javascript interop is to break the code above into tinier functions and introduce some new macros.  First, we introduce the `(>? ..)` function to create a callback of arbitrary length, which then jams its first non-nil value into a channel. For example, if `c` is a channel, then `(>! c)` outputs the following callback function:
 
     (fn [& args] 
         (go-loop [a args]
@@ -50,21 +41,21 @@ A better way to go about javascript interop is break the code above into tinier 
                                   (>! c (first (chan-sanitized a))) 
                                   (recur (rest a))))))
 
-Notice that this callback function doesn't specify how many arguments it can take.  This means, in particular, that we can use it as a all-purpose callback for almost any javascript async function, given that javascript tends to abide by the [error-first callback pattern](http://fredkschott.com/post/2014/03/understanding-error-first-callbacks-in-node-js/). For example:
+Notice that this callback function doesn't specify how many arguments it can take.  This means, in particular, that we can use it as an all-purpose callback for many javascript async functions (given that javascript tends to abide by the [error-first callback pattern](http://fredkschott.com/post/2014/03/understanding-error-first-callbacks-in-node-js/)). For example:
 
     (.readFile (nodejs/require "fs") "path/to/file" "utf8" (>? c))
 
-And, in case we want a custom error message to be fit into our channel, `>?` is capable of handling these as well:
+And, in case we want a custom error message to placed into our channel, `>?` is capable of taking an optional third argument:
 
-    (.readFile (nodejs/require "fs") "path/to/file" "utf8" (>? c "ERROR: This is a custom error."))
+    (.readFile (nodejs/require "fs") "path/to/file" "utf8" (>? c "ERROR: This is a custom error which will be jammed into c in case readFile fails."))
 
 ## Forcing the nth Argument of a Callback into a Channel
 
-Every once in a while, you will want to target the *nth* member of a callback argument, regardless if the other arguments contain error values. In those cases you can use `>1`, `>2`, and `>3` to target the first, second, and third callback arguments:
+Sometimes it can be useful to force the *nth* member of a callback argument into a channel, regardless of whether the other callback arguments contain error values or not. In these cases, you can use `>1`, `>2`, and `>3` to target the first, second, and third callback arguments. In the case of node's `.readFile`, we can use `>2`:
   
-    (.readFile (nodejs/require "fs") "path/to/file" "utf8" (>2 c)) ;;this will jam the second argument of the generated callback into c, regardless of what the first argument is
+    (.readFile (nodejs/require "fs") "path/to/file" "utf8" (>2 c)) ;;this will jam the second argument of the generated callback into c, regardless of whether the first argument is truthy
 
-## Converting an Async JS Function into a Channel with Its Callback Value (In Progress)
+## Jam an Asynchronous JS Function's Callback Value into a Channell in a One Line
 
 Recall above how we went about jamming the callback value of an async function into a channel:
 
@@ -72,11 +63,11 @@ Recall above how we went about jamming the callback value of an async function i
      (let [c (chan 1)]
        (.readFile (nodejs/require "fs") "path/to/file" "utf8" (fn [err, res] (go (>! c res))) (<! c)))
 
-With the `(<? ..)` macro, we can reduce this to one line:
+With the `(<? ..)` macro available in this repo, we can reduce this to a one liner:
 
      (<? (.readFile (nodejs/require "fs") "path/to/file" "utf8" _))
 
-Behind the scenes, this macro is replacing the `_` character with the `>?` callback discussed above, and wrapping the code block thing in a go block. It can also handle custom error messages:
+Behind the scenes, this macro is replacing the `_` character with the `>?` callback discussed above, and wrapping the code in a go block. It can also handle custom error messages:
 
      (<? (.readFile (nodejs/require "fs") "path/to/file" "utf8" _) "ERROR: Custom err message")
 
@@ -84,10 +75,10 @@ Behind the scenes, this macro is replacing the `_` character with the `>?` callb
 
 ## Printing from Channels
 
-Printing from channels is frequently useful. The long way to do this is as follows:
+Printing from channels is frequently useful. The cumbersome way to do this is as follows:
  
      (go (println (<! channel))) 
 
-This library provides the `(<print ..)` function to shorten this
+So this library provides the `(<print ..)` function to shorten this
 
     (<print channel)
