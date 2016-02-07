@@ -84,3 +84,7 @@ Printing from channels is frequently useful. The cumbersome way to do this is as
 So this library provides the `(<print ..)` function to shorten this
 
     (<print channel)
+
+# 4 NOTE
+
+While all of the code in this repo is working, it is generally out of date with the code [found in this template](https://github.com/georgewsinger/lein-node-cli-template).
